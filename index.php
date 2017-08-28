@@ -9,19 +9,18 @@
 	$service = new ServiceConnectionDB($dbConn);
     $customer = new Customer();
 
-    /** Chamada do INSERT do SERVICE
-     *
+    /** INSERT - SERVICE
         $column = array(
-            'nome' => 'Leonard',
-            'cpf' => '84684810097',
-            'email' => 'leonardo@gmail.com',
+            'nome' => 'NewUser',
+            'cpf' => '999999999999',
+            'email' => 'user@user.com',
             'sexo' => 'm'
         );
 
       $service->insert("cliente", $column);
      */
 
-     /**Chamada do SELECT ALL do SERVICE
+     /**SELECT ALL - SERVICE
         //$column = array('idCliente' => 2); //Opcional
         $item = $service->getAll("SELECT * FROM Cliente");
 
@@ -30,19 +29,22 @@
         }*/
     
 
-    //Chamada do FIND do SERVICE
+    /**FIND - SERVICE
         $column = array('idCliente' => 1);
-        $item = $service->find("SELECT * FROM cliente WHERE idCliente=:idCliente", $column);
+        $item = array($service->find("SELECT * FROM cliente WHERE idCliente=:idCliente", $column));
 
-        foreach ($item as $key => $value){
+        foreach($item as $value){
+            echo $value['nome'];
+            echo $value['cpf'];
             echo $value['email'];
         }
+    */
 
+    /**UPDATE - SERVICE
+        $column = array('nome' => 'NewUser');
+        $service->update("cliente", $column, "idCliente = 1");
+    */
 
-
-    //$customer->updateCustomer();
+    $service->remove("cliente", "idCliente=:4");
 
     //$customer->deleteCustomer(3);
-
-    //$result = $customer->findCustomer(2);
-   //echo $result['nome'];

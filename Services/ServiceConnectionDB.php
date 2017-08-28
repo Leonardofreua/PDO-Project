@@ -6,12 +6,13 @@
 
         /**
          * ServiceConnectionDB constructor.
-         * @param $dbConn
+         *
+         * @access public
+         * @param object|PDO $dbConn
          */
         public function __construct(\PDO $dbConn){
             $this->dbConn = $dbConn;
         }
-
 
         /**
          * insert - Inserts the data in the entities of the database
@@ -47,9 +48,10 @@
          *
          * @access public
          * @param $query
-         * @param array $columnh - Columns that will be returned
+         * @param array $column
          * @param int $fetchMode
          * @return array - Return query
+         * @internal param array $columnn - Columns that will be returned
          */
         public function getAll($query, $column = array(), $fetchMode = PDO::FETCH_ASSOC){
             try{
@@ -68,12 +70,19 @@
             }
         }
 
+        /**
+         * find - Performs a specific search
+         *
+         * @access public
+         * @param $query
+         * @param array $array
+         * @param int $fetchMode
+         * @return mixed
+         */
         public function find($query, $array = array(), $fetchMode = PDO::FETCH_ASSOC){
             try{
 
                 $stmt = $this->dbConn->prepare($query);
-
-                echo $query;
 
                 foreach ($array as $key => $value) {
                     $stmt->bindValue("$key", $value);
@@ -85,5 +94,49 @@
             }catch(PDOException $e){
                 echo $e->getMessage();
             }
+        }
+
+        /**
+         * update - Updates the information of the desired table
+         *
+         * @param $table
+         * @param $column
+         * @param $where
+         */
+        public function update($table, $column, $where){
+            try{
+                ksort($column);
+
+                $fieldDetails = null;
+
+                foreach ($column as $key => $value){
+                    $fieldDetails .= "$key=:$key,";
+                }
+
+                $fieldDetails = rtrim($fieldDetails, ',');
+
+                $stmt = $this->dbConn->prepare("UPDATE $table SET $fieldDetails WHERE $where");
+
+                foreach ($column as $key => $value){
+                    $stmt->bindValue(":$key", $value);
+                }
+
+                $stmt->execute();
+            }catch(PDOException $e){
+                echo $e->getMessage();
+            }
+        }
+
+        /**
+         * @param $table
+         * @param array $where
+         * @param int $limit
+         * @return bool
+         */
+        public function remove($table, $where, $limit = 1){
+
+            $stmt = $this->dbConn->prepare("DELETE FROM $table WHERE $where LIMIT $limit");
+
+            return $stmt->execute();
         }
     }
