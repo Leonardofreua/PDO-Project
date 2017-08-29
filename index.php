@@ -21,30 +21,27 @@
      */
 
      /**SELECT ALL - SERVICE
-        //$column = array('idCliente' => 2); //Opcional
+        //$column = array('id' => 2); //Opcional
         $item = $service->getAll("SELECT * FROM Cliente");
 
         foreach ($item as $key => $value){
-            echo $value['nome'];
-        }*/
-    
+            echo $value['nome'] . "</br>";
+        }
+     */
 
     /**FIND - SERVICE
-        $column = array('idCliente' => 1);
-        $item = array($service->find("SELECT * FROM cliente WHERE idCliente=:idCliente", $column));
+        $column = array('id' => 8);
+        $item = array($service->find("SELECT * FROM cliente WHERE id=:id", $column));
 
         foreach($item as $value){
-            echo $value['nome'];
-            echo $value['cpf'];
+            echo $value['nome'] . "</br>";
             echo $value['email'];
         }
     */
 
     /**UPDATE - SERVICE
         $column = array('nome' => 'NewUser');
-        $service->update("cliente", $column, "idCliente = 1");
+        $service->update("cliente", $column, "id = 7");
     */
 
-    $service->remove("cliente", "idCliente=:4");
-
-    //$customer->deleteCustomer(3);
+    //$service->remove("cliente", "id", 6);

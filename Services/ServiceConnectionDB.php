@@ -102,6 +102,7 @@
          * @param $table
          * @param $column
          * @param $where
+         * @return bool
          */
         public function update($table, $column, $where){
             try{
@@ -122,21 +123,46 @@
                 }
 
                 $stmt->execute();
+
+                if(!$stmt->rowCount()){
+                    echo "Registry not found!";
+                    return false;
+                }else{
+                    return true;
+                }
+
             }catch(PDOException $e){
                 echo $e->getMessage();
             }
         }
 
         /**
+         * remove - Remove the reported registry
+         *
          * @param $table
-         * @param array $where
+         * @param $fieldName
+         * @param $value
          * @param int $limit
          * @return bool
          */
-        public function remove($table, $where, $limit = 1){
+        public function remove($table, $fieldName, $value, $limit = 1){
+            try{
+                $query = "DELETE FROM $table WHERE " . $fieldName . "=" . $value . " LIMIT $limit";
 
-            $stmt = $this->dbConn->prepare("DELETE FROM $table WHERE $where LIMIT $limit");
+                $stmt = $this->dbConn->prepare($query);
 
-            return $stmt->execute();
+                $stmt->bindValue(":$fieldName", $value);
+
+                $stmt->execute();
+
+                if(!$stmt->rowCount()){
+                    echo "Registry not found!";
+                    return false;
+                }else{
+                    return true;
+                }
+            }catch(PDOException $e){
+                echo $e->getMessage();
+            }
         }
     }
